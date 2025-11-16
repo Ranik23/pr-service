@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="001-create-users-table" author="backend-intern">
+        <sqlFile path="000001_create_users_table.up.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="000001_create_users_table.down.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="002-create-teams-table" author="backend-intern">
+        <sqlFile path="000002_create_teams_table.up.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="000002_create_teams_table.down.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="003-create-pull-requests-table" author="backend-intern">
+        <sqlFile path="000003_create_pull_requests_table.up.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="000003_create_pull_requests_table.down.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

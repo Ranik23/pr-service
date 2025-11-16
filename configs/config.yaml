@@ -1,0 +1,57 @@
+logging:
+  mode: "dev"        
+  level: "debug"              
+  encoding: "console"      
+
+  sampling:          
+    initial: 50
+    thereafter: 100
+
+  initialFields:          
+    service: "auth"
+    env:     "production"
+
+  disableCaller: true       
+  disableStacktrace: true  
+
+  outputPaths:
+    - "stdout"
+
+  errorOutputPaths:
+    - "stderr"
+
+  timestampKey: "ts"       
+  capitalizeLevel: true     
+
+application: ""
+
+public_server:
+  enable: true
+  endpoint: "0.0.0.0"
+  port: 8080
+  shutdown_timeout: 30
+
+metrics:
+  endpoint: "0.0.0.0"
+  port: 9090
+  db_query_interval: 3
+
+storage:
+  postgres:
+    port: 5432
+    database: "db_name"
+    username: "user"
+    ssl_mode: "disable"
+    connection_attempts: 3
+    pool:
+      max_connections: 50
+      min_connections: 20
+      max_lifetime: 3600
+      max_idle_time: 300
+      health_check_period: 30
+
+  redis:
+    port: 6379
+    db: 0
+    connection_attempts: 3
+    password: "pass"

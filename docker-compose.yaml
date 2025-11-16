@@ -1,0 +1,118 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: app_name
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: "postgres"
+      DB_PASSWORD: "pass"
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "pass"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app_net
+
+  postgres:
+    container_name: postgres_container
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "db_name"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
+    tmpfs:
+      - /var/lib/postgresql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d db_name"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - app_net
+
+  redis:
+    container_name: redis_container
+    image: redis:latest
+    tmpfs:
+      - /data
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=pass
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app_net
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:8.4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "email@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "pass"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    networks:
+      - app_net
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    container_name: swagger_ui
+    ports:
+      - "8081:8080"
+    environment:
+      SWAGGER_JSON: /spec/openapi.yml
+    volumes:
+      - ./api/openapi.yml:/spec/openapi.yml
+    networks:
+      - app_net
+
+  liquibase:
+    image: liquibase/liquibase:4.29
+    container_name: liquibase_container
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/liquibase/changelog
+    command: >
+      --url=jdbc:postgresql://postgres:5432/db_name
+      --changeLogFile=changelog.xml
+      --username=user
+      --password=pass
+      --searchPath=/liquibase/changelog
+      update
+    restart: "no"
+    networks:
+      - app_net
+
+volumes:
+  app_name:
+  pgadmin-data:
+
+networks:
+  app_net:
+    driver: bridge

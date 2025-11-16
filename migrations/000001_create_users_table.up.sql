@@ -1,0 +1,5 @@
+CREATE TABLE users (
+    id VARCHAR(255) PRIMARY KEY,
+    is_active BOOLEAN DEFAULT TRUE,
+    name VARCHAR(255) NOT NULL
+);
