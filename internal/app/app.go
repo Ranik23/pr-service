@@ -79,12 +79,12 @@ func NewServer(cfg *config.Config, logger logger.Logger) *Server {
 	teamStorage := postgres.NewTeamStorage(txManager, logger)
 	userStorage := postgres.NewUserStorage(txManager, logger)
 	prStorage := postgres.NewPRStorage(txManager, logger)
-	statsCache := redis.NewStatsCache(redisClient)
+	statsCache := redis.NewStatsCache(redisClient, logger)
 
 	prUseCase := pr_usecase.NewPRUseCase(prStorage, userStorage, statsCache, teamStorage, txManager, logger)
 	userUseCase := user_usecase.NewUserUseCase(userStorage, txManager, teamStorage, logger)
 	teamUseCase := team_usecase.NewTeamUseCase(teamStorage, userStorage, txManager, logger)
-	statsUseCase := stats_usecase.NewStatsUseCase(statsCache)
+	statsUseCase := stats_usecase.NewStatsUseCase(statsCache, userStorage)
 
 	pullRequestController := controllers.NewPullRequestController(prUseCase)
 	userController := controllers.NewUserController(userUseCase)

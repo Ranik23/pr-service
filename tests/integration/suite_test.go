@@ -101,7 +101,7 @@ func (s *TestSuite) SetupSuite() {
 	prUseCase 	 := pr_usecase.NewPRUseCase(prStorage, userStorage, statsCache, teamStorage, txManager, logger)
 	userUseCase  := user_usecase.NewUserUseCase(userStorage, txManager, teamStorage, logger)
 	teamUseCase  := team_usecase.NewTeamUseCase(teamStorage, userStorage, txManager, logger)
-	statsUseCase := stats_usecase.NewStatsUseCase(statsCache)
+	statsUseCase := stats_usecase.NewStatsUseCase(statsCache, userStorage)
 
 	usecase := usecase.NewUseCase(userUseCase, teamUseCase, prUseCase, statsUseCase)
 

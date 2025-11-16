@@ -12,7 +12,6 @@ type Config struct {
 	Application  string             `mapstructure:"application"`
 	PublicServer PublicServerConfig `mapstructure:"public_server"`
 	Storage      StorageConfig      `mapstructure:"storage"`
-	Metrics      MetricsConfig      `mapstructure:"metrics"`
 }
 
 func LoadConfig(configPath, envPath string) (*Config, error) {
