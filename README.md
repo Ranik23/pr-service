@@ -5,7 +5,7 @@
 ## Запуск
 
 ```bash
-make docker
+docker compose up
 ```
 
 ## Доступ
