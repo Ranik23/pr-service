@@ -4,8 +4,8 @@ info:
   version: "1.0.0"
 
 servers:
-  - url: http://localhost:8080
-    description: Local server
+  - url: http://localhost:${SERVER_PORT}
+    description: Docker API server
 
 tags:
   - name: Teams

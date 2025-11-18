@@ -35,7 +35,6 @@ func (c *Closer) Close(ctx context.Context) error {
 		done    = make(chan struct{})
 	)
 
-	// We finish in LIFO order
 	for i := len(c.funcs) - 1; i >= 0; i-- {
 		wg.Add(1)
 		go func(f Func) {

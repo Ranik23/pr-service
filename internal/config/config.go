@@ -31,6 +31,8 @@ func LoadConfig(configPath, envPath string) (*Config, error) {
 
 	viper.AutomaticEnv()
 
+
+	
 	if err := viper.BindEnv("storage.postgres.hosts", "DB_HOST"); err != nil {
 		return nil, fmt.Errorf("error binding env variable DB_HOST: %v", err)
 	}

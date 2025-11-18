@@ -12,7 +12,7 @@ services:
       REDIS_HOST: "redis"
       REDIS_PASSWORD: "pass"
     ports:
-      - "8080:8080"
+      - "${SERVER_PORT}:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -33,8 +33,6 @@ services:
       POSTGRES_PASSWORD: "pass"
     tmpfs:
       - /var/lib/postgresql
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d db_name"]
       interval: 10s
@@ -50,8 +48,6 @@ services:
     image: redis:latest
     tmpfs:
       - /data
-    ports:
-      - "6379:6379"
     environment:
       - REDIS_PASSWORD=pass
     healthcheck:
@@ -82,13 +78,14 @@ services:
     image: swaggerapi/swagger-ui
     container_name: swagger_ui
     ports:
-      - "8081:8080"
+      - "${SWAGGER_PORT}:8080"
     environment:
       SWAGGER_JSON: /spec/openapi.yml
+      SERVER_PORT: ${SERVER_PORT}
     volumes:
-      - ./api/openapi.yml:/spec/openapi.yml
-    networks:
-      - app_net
+      - ./api/openapi.yml:/spec/openapi.template.yml
+      - ./scripts/generate-openapi.sh:/generate-openapi.sh
+    command: ["sh", "-c", "chmod +x /generate-openapi.sh && /generate-openapi.sh && /docker-entrypoint.sh nginx -g 'daemon off;'"]
 
   liquibase:
     image: liquibase/liquibase:4.29
